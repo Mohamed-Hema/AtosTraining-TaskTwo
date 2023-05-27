@@ -2,13 +2,20 @@
 const pool = require('../db/db');
 const queries = require('../queries/queries');
 
-
-const getUsers = (req, res) => {
-  pool.query(queries.getUsers, (error, results) => {
-      if(error) throw error;
+// Get all Users
+const getUsers = async (req, res) => {
+  try {
+    const results = await pool.query(queries.getUsers);
+    if (results.rows.length === 0) {
+      res.status(404).send('No users found');
+    } else {
       res.status(200).json(results.rows);
-  })
-}
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 
 // Create user endpoint logic

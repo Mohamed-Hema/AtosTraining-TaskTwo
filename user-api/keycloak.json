@@ -1,0 +1,10 @@
+{
+  "realm": "examengine",
+  "serverUrl": "http://localhost:8080/",
+  "ssl-required": "external",
+  "resource": "myclient",
+  "credentials": {
+    "secret": "pUAp8Y6mofcA36ADCb4Not18kNv2JVhO"
+  },
+  "confidential-port": 8080
+}
