@@ -1,18 +1,18 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('usersexamengine', 'postgres', 'Hema', {
+const sequelize = new Sequelize('examenginedb', 'postgres', 'Hema', {
   host: 'localhost',
   dialect: 'postgres',
-  port: 5432,
 });
 
-(async () => {
-  try {
-    await sequelize.authenticate();
+// Test the database connection
+sequelize
+  .authenticate()
+  .then(() => {
     console.log('Connection to the database has been established successfully.');
-  } catch (error) {
+  })
+  .catch((error) => {
     console.error('Unable to connect to the database:', error);
-  }
-})();
+  });
 
 module.exports = sequelize;

@@ -1,15 +1,16 @@
 // const keycloak = require('../utils/keycloak.json');
 const pool = require('../db/db');
-const queries = require('../queries/queries');
+const User = require('../models/user');
+
 
 // Get all Users
 const getUsers = async (req, res) => {
   try {
-    const results = await pool.query(queries.getUsers);
-    if (results.rows.length === 0) {
+    const users = await User.findAll();
+    if (users.length === 0) {
       res.status(404).send('No users found');
     } else {
-      res.status(200).json(results.rows);
+      res.status(200).json(users);
     }
   } catch (error) {
     console.error(error);
@@ -17,19 +18,17 @@ const getUsers = async (req, res) => {
   }
 };
 
-
 // Create user endpoint logic
 const createUser = async (req, res) => {
   const { username, password, userType } = req.body;
   try {
-    await pool.query(queries.createUser, [username, password, userType]);
+    await User.create({ username, password, userType });
     res.send('User created successfully');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
   }
 };
-
 
 // Create roles endpoint logic
 const createRoles = async (req, res) => {
@@ -49,5 +48,3 @@ module.exports = {
   createRoles,
   assignRolesToUser,
 };
-
-
