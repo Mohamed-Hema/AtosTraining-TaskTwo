@@ -49,6 +49,21 @@ async function createExamInstance(req, res) {
   }
 }
 
+async function getExams() {
+  try {
+    // Fetch all exam instances from the database
+    const exams = await ExamInstance.findAll();
+
+    // Return the exam instances
+    return exams;
+  } catch (error) {
+    console.error('Error fetching exams:', error);
+    throw error;
+  }
+}
+
+
+
 // Helper function to generate the exam URL
 function generateExamUrl(examInstanceId) {
   // Generate a unique URL using the id of the exam instance
@@ -59,5 +74,6 @@ function generateExamUrl(examInstanceId) {
 
 module.exports = {
   createExamInstance,
-  generateExamUrl
+  generateExamUrl,
+  getExams,
 };
