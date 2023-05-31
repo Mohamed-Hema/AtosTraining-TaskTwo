@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -21,7 +21,7 @@ const CreateExam = () => {
     try {
       await axios.post('http://localhost:3000/api/create-exam', examInstanceData);
       // Exam instance created successfully, redirect to the desired page
-      navigate.push('/exams');
+      navigate('/exams');
     } catch (error) {
       console.log('Failed to create exam instance:', error);
       // Handle error scenario, display error message, etc.

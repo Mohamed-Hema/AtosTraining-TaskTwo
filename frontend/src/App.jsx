@@ -10,13 +10,15 @@ const App = () => {
 
   return (
     isLogin ?
-      <Router>
-        <Routes>
-          <Route exact path="/exams" component={Protected} />
-          <Route path="/create-exam" component={CreateExam} />
-          <Route path="/exams" component={Exams} />
-        </Routes>
-      </Router>
+    <>
+       <Router>
+      <Routes>
+        <Route path="/" element={<Public />} />
+        <Route path="/create-exam" element={<CreateExam />} />
+        <Route path="/exams" element={<Exams />} />
+      </Routes>
+    </Router>
+      </>
     : <Public />
   );
 }
