@@ -1,18 +1,11 @@
 const ExamInstance = require('../models/examInstance');
-const ExamDefinition = require('../models/examDefinition');
+// const ExamDefinition = require('../models/examDefinition');
 const { Sequelize, DataTypes } = require('sequelize');
 
 // Create a new exam instance
 async function createExamInstance(req, res) {
   try {
-    const { examDefinitionId, createdBy, takenBy } = req.body;
-
-    // Fetch the associated exam definition
-    const examDefinition = await ExamDefinition.findByPk(examDefinitionId);
-
-    if (!examDefinition) {
-      return res.status(404).json({ error: 'Exam definition not found' });
-    }
+    const { createdBy, takenBy } = req.body;
 
     // Calculating completion time based on start time and duration
     const startTime = new Date();
@@ -22,7 +15,7 @@ async function createExamInstance(req, res) {
 
     // Create the exam instance
     const examInstance = await ExamInstance.create({
-      examDefinitionId,
+      // examDefinitionId,
       startTime,
       endTime,
       duration,
@@ -30,14 +23,9 @@ async function createExamInstance(req, res) {
       createdBy,
       takenBy,
       status: 'absent',
+      passingScore: 0.5, // Set the passing score to 50%
     });
 
-    // Generating the link object
-    const generatedLink = {
-      scheduledTimeFrom: startTime,
-      scheduledTimeTo: endTime,
-      url: generateExamUrl(examInstance.id), // Pass the id of the exam instance to the generateExamUrl function
-    };
 
     // Update the exam instance with the generated link
     await examInstance.update({ generatedLink });
@@ -49,31 +37,12 @@ async function createExamInstance(req, res) {
   }
 }
 
-async function getExams() {
-  try {
-    // Fetch all exam instances from the database
-    const exams = await ExamInstance.findAll();
-
-    // Return the exam instances
-    return exams;
-  } catch (error) {
-    console.error('Error fetching exams:', error);
-    throw error;
-  }
-}
 
 
 
-// Helper function to generate the exam URL
-function generateExamUrl(examInstanceId) {
-  // Generate a unique URL using the id of the exam instance
-  const url = `https://example.com/exam/${examInstanceId}`;
 
-  return url;
-}
+
 
 module.exports = {
-  createExamInstance,
-  generateExamUrl,
-  getExams,
+  createExamInstance
 };

@@ -14,7 +14,10 @@ const ExamDefinition = sequelize.define('ExamDefinition', {
   passingScore: {
     type: DataTypes.FLOAT,
     allowNull: false,
+    defaultValue: 0.5,
   },
+}, {
+  tableName: 'ExamDefinition',
 });
 
 module.exports = ExamDefinition;

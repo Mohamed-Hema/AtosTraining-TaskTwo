@@ -1,7 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import Keycloak from "keycloak-js";
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import Keycloak from 'keycloak-js';
+import PropTypes from 'prop-types';
 
-const useAuth = () => {
+const AuthContext = React.createContext();
+
+export const AuthProvider = ({ children }) => {
   const isRun = useRef(false);
   const [isLogin, setLogin] = useState(false);
 
@@ -9,28 +12,35 @@ const useAuth = () => {
     if (isRun.current) return;
 
     isRun.current = true;
-    
+
     const keycloakConfig = {
       url: import.meta.env.VITE_KEYCLOAK_URL,
       realm: import.meta.env.VITE_KEYCLOAK_REALM,
       clientId: import.meta.env.VITE_KEYCLOAK_CLIENT,
     };
-    
-    const client = new Keycloak(keycloakConfig);
 
-    client
+    const keycloak = new Keycloak(keycloakConfig);
+
+    keycloak
       .init({
         onLoad: 'login-required',
       })
-      .then((res) => {
-        setLogin(res);
-      })
-      .catch((error) => {
-        console.log('Failed to initialize Keycloak client:', error);
+      .then((authenticated) => {
+        setLogin(authenticated);
       });
+
   }, []);
 
-  return [isLogin];
+  return (
+    <AuthContext.Provider value={isLogin}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default useAuth;
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+
+export const useAuth = () => useContext(AuthContext);

@@ -1,11 +1,9 @@
-import React from 'react';
-import CreateExam from './CreateExam';
+import CreateExamDefinition from '../components/CreateExamDefinition';
 
 const CreateExamPage = () => {
   return (
     <div>
-      <h1>Create Exam Page</h1>
-      <CreateExam />
+      <CreateExamDefinition />
     </div>
   );
 };

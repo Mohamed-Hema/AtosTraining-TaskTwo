@@ -49,6 +49,8 @@ const ExamInstance = db.define('ExamInstance', {
     allowNull: false,
     defaultValue: 'absent',
   },
+}, {
+  tableName: 'ExamInstance',
 });
 
 module.exports = ExamInstance;
