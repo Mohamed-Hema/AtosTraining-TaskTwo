@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateExamDefinition = () => {
   const [examName, setExamName] = useState('');
   const [questions, setQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch questions from the backend API
@@ -22,6 +25,11 @@ const CreateExamDefinition = () => {
   }, []);
 
   const handleCreateExam = async () => {
+    if (!examName || selectedQuestions.length === 0) {
+      setErrorMessage('You must fill all fields.');
+      return;
+    }
+
     try {
       const requestBody = {
         name: examName,
@@ -40,6 +48,9 @@ const CreateExamDefinition = () => {
         const lastExamId = examIds[examIds.length - 1]; // Get the last ID
         
         console.log('Last Exam ID:', lastExamId);
+
+        // Redirect the user to /create-exam-instance with the last exam ID as a query parameter
+        navigate(`/create-exam-instance?examId=${lastExamId}`);
       } else {
         console.log('Exam creation failed.');
       }
@@ -71,6 +82,7 @@ const CreateExamDefinition = () => {
               placeholder="Enter exam name"
               value={examName}
               onChange={(e) => setExamName(e.target.value)}
+              required
             />
           </Form.Group>
 
@@ -92,8 +104,12 @@ const CreateExamDefinition = () => {
               Create Exam Definition
             </Button>
           </div>
-
           
+          {errorMessage && (
+            <Alert variant="danger" className="mt-3">
+              {errorMessage}
+            </Alert>
+          )}
         </Form>
       </div>
     </div>

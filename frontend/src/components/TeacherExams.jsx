@@ -3,19 +3,18 @@ import { Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Exams = () => {
+const TeacherExams = () => {
   const [exams, setExams] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch exams data from the backend when the component mounts
     const fetchExams = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/getexams");
         const examsData = response.data;
         setExams(examsData);
       } catch (error) {
-        console.log("Failed to fetch exams:", error);
+        console.error("Failed to fetch exams:", error);
         // Handle error scenario, display error message, etc.
       }
     };
@@ -48,4 +47,4 @@ const Exams = () => {
   );
 };
 
-export default Exams;
+export default TeacherExams;

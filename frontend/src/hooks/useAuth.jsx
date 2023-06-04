@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import Keycloak from 'keycloak-js';
 import PropTypes from 'prop-types';
 
-const AuthContext = React.createContext();
+export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const isRun = useRef(false);
   const [isLogin, setLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState({ isLogin: false, userType: null });
 
   useEffect(() => {
     if (isRun.current) return;
@@ -26,13 +27,17 @@ export const AuthProvider = ({ children }) => {
         onLoad: 'login-required',
       })
       .then((authenticated) => {
-        setLogin(authenticated);
+        if (authenticated) {
+          const userType = keycloak.tokenParsed.userType;
+          setLogin(authenticated);
+          setUserInfo({ isLogin: authenticated, userType });
+        }
       });
 
   }, []);
 
   return (
-    <AuthContext.Provider value={isLogin}>
+    <AuthContext.Provider value={userInfo}>
       {children}
     </AuthContext.Provider>
   );
@@ -41,6 +46,5 @@ export const AuthProvider = ({ children }) => {
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
 
 export const useAuth = () => useContext(AuthContext);

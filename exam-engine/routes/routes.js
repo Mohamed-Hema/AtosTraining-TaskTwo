@@ -10,6 +10,6 @@ router.post('/create-exam', examController.createExamInstance);
 //Getting Exams
 router.get('/getexams', examController.getExams);
 router.get('/getexams/:id', examController.getExamById);
+router.get('/getexaminstance/:id', examController.getExamInstanceById);
 
-
-module.exports = router;5000
+module.exports = router;
