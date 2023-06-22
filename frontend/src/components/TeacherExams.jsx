@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ExamDetails from "./ExamDetails";
 
 const TeacherExams = () => {
   const [exams, setExams] = useState([]);
+  const [selectedExam, setSelectedExam] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +15,9 @@ const TeacherExams = () => {
         const response = await axios.get("http://localhost:5000/api/getexams");
         const examsData = response.data;
         setExams(examsData);
+        console.log(examsData);
       } catch (error) {
         console.error("Failed to fetch exams:", error);
-        // Handle error scenario, display error message, etc.
       }
     };
 
@@ -24,6 +26,8 @@ const TeacherExams = () => {
 
   const handleExamClick = (examId) => {
     navigate(`/exams/${examId}`);
+    const selectedExam = exams.find((exam) => exam.id === examId);
+    setSelectedExam(selectedExam);
   };
 
   return (
@@ -35,7 +39,7 @@ const TeacherExams = () => {
             <Button
               variant="primary"
               className="mt-3"
-              block
+              block="true"
               onClick={() => handleExamClick(exam.id)}
             >
               {exam.name}
@@ -43,6 +47,7 @@ const TeacherExams = () => {
           </Col>
         ))}
       </Row>
+      {selectedExam && <ExamDetails questions={selectedExam.questions} />}
     </div>
   );
 };

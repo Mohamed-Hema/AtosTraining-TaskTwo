@@ -1,50 +1,34 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Keycloak from 'keycloak-js';
-import PropTypes from 'prop-types';
 
-export const AuthContext = React.createContext();
-
-export const AuthProvider = ({ children }) => {
+export const useAuth = () => {
   const isRun = useRef(false);
+  const [token, setToken] = useState(null);
   const [isLogin, setLogin] = useState(false);
-  const [userInfo, setUserInfo] = useState({ isLogin: false, userType: null });
+
+  const keycloakConfig = {
+    url: import.meta.env.VITE_KEYCLOAK_URL,
+    realm: import.meta.env.VITE_KEYCLOAK_REALM,
+    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT,
+  };
 
   useEffect(() => {
     if (isRun.current) return;
 
     isRun.current = true;
+    const client = Keycloak(keycloakConfig);
 
-    const keycloakConfig = {
-      url: import.meta.env.VITE_KEYCLOAK_URL,
-      realm: import.meta.env.VITE_KEYCLOAK_REALM,
-      clientId: import.meta.env.VITE_KEYCLOAK_CLIENT,
-    };
-
-    const keycloak = new Keycloak(keycloakConfig);
-
-    keycloak
+    client
       .init({
         onLoad: 'login-required',
       })
-      .then((authenticated) => {
-        if (authenticated) {
-          const userType = keycloak.tokenParsed.userType;
-          setLogin(authenticated);
-          setUserInfo({ isLogin: authenticated, userType });
-        }
+      .then((res) => {
+        setLogin(res);
+        setToken(client.token);
       });
-
   }, []);
 
-  return (
-    <AuthContext.Provider value={userInfo}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return [isLogin, token];
 };
 
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-export const useAuth = () => useContext(AuthContext);
+export default useAuth;

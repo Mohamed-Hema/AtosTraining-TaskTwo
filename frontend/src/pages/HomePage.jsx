@@ -9,7 +9,7 @@ const HomePage = () => {
   };
 
   const handleStudentClick = () => {
-    navigate("/exams");
+    navigate("/studentexams");
   };
 
   return (
@@ -24,11 +24,7 @@ const HomePage = () => {
         >
           Teacher
         </Button>
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={handleStudentClick}
-        >
+        <Button variant="secondary" size="lg" onClick={handleStudentClick}>
           Student
         </Button>
       </div>
